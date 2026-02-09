@@ -7,7 +7,6 @@ import sparta.advancedscheduler.schedule.dto.RequestScheduleDto;
 import sparta.advancedscheduler.schedule.dto.RequestScheduleUpdateDto;
 import sparta.advancedscheduler.schedule.dto.ResponseScheduleDto;
 import sparta.advancedscheduler.schedule.dto.ResponseScheduleListDto;
-import sparta.advancedscheduler.schedule.entity.Schedule;
 import sparta.advancedscheduler.schedule.service.ScheduleService;
 
 import java.util.List;

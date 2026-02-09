@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import sparta.advancedscheduler.global.entity.AuditableEntity;
-import sparta.advancedscheduler.schedule.dto.RequestScheduleDto;
 import sparta.advancedscheduler.schedule.dto.RequestScheduleUpdateDto;
 
 
