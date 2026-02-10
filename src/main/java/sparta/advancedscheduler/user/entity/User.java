@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import sparta.advancedscheduler.global.entity.AuditableEntity;
 import sparta.advancedscheduler.user.dto.ResponseUpdateUserDto;
 
@@ -12,7 +11,6 @@ import sparta.advancedscheduler.user.dto.ResponseUpdateUserDto;
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Slf4j
 public class User extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +32,6 @@ public class User extends AuditableEntity {
     }
 
     public void update(ResponseUpdateUserDto requestDto) {
-        log.info(requestDto.getUsername());
         this.username = requestDto.getUsername();
     }
 }

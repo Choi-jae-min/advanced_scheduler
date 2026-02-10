@@ -13,6 +13,7 @@ import sparta.advancedscheduler.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -72,5 +73,10 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException("존재하지 않는 유저입니다.")
         );
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> getUser(String email) {
+        return userRepository.findByEmail(email);
     }
 }

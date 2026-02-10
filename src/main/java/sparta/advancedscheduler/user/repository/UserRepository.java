@@ -6,9 +6,12 @@ import org.springframework.data.repository.query.Param;
 import sparta.advancedscheduler.user.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u WHERE :username is null or u.username = :username")
     List<User> findALlByUsername(@Param("username") String username);
+
+    Optional<User> findByEmail(String email);
 }
