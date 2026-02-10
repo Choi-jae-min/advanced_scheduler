@@ -6,6 +6,10 @@ public interface ResponseDto <T>{
         return new ErrorResponseDto<>(message);
     }
 
+    static <T> ResponseDto<T> errorWithData(T data ,String message){
+        return new ErrorResponseDto<>(message, data);
+    }
+
     static <T> ResponseDto<T> success(T data , String message){
         return new SuccessDto<>(data ,message);
     }

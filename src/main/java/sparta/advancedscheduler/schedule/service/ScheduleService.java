@@ -51,9 +51,7 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     public ResponseScheduleDto findScheduleListById(Long scheduleId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new EntityNotFoundException("일정이 존재하지 않습니다 : " + scheduleId)
-        );
+        Schedule schedule = findScheduleById(scheduleId);
 
         return new ResponseScheduleDto(
                 schedule.getTitle(),
@@ -66,9 +64,7 @@ public class ScheduleService {
 
     @Transactional
     public ResponseScheduleDto updateScheduleById(Long scheduleId , RequestScheduleUpdateDto body) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new EntityNotFoundException("일정이 존재하지 않습니다 : " + scheduleId)
-        );
+        Schedule schedule = findScheduleById(scheduleId);
 
         schedule.update(body);
         return new ResponseScheduleDto(
@@ -79,7 +75,7 @@ public class ScheduleService {
                 schedule.getLastModifiedDate()
         );
     }
-
+    @Transactional
     public Long deleteSchedule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new EntityNotFoundException("일정이 존재하지 않습니다 : " + scheduleId)
@@ -87,5 +83,11 @@ public class ScheduleService {
 
         scheduleRepository.delete(schedule);
         return scheduleId;
+    }
+
+    private Schedule findScheduleById(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new EntityNotFoundException("일정이 존재하지 않습니다 : " + scheduleId)
+        );
     }
 }

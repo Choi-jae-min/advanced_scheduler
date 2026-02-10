@@ -1,5 +1,6 @@
 package sparta.advancedscheduler.schedule.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import sparta.advancedscheduler.auth.service.AuthorizationService;
@@ -20,6 +21,7 @@ public class ScheduleController {
     private final AuthorizationService authorizationService;
     @PostMapping
     public ResponseDto<Long> createSchedule(
+            @Valid
             @RequestBody RequestScheduleDto requestScheduleDto,
             @CookieValue(name = "SESSION") String sessionId
     ) {
@@ -44,6 +46,7 @@ public class ScheduleController {
 
     @PatchMapping("{scheduleId}")
     public ResponseDto<ResponseScheduleDto> updateSchedule(
+            @Valid
             @PathVariable Long scheduleId,
             @RequestBody RequestScheduleUpdateDto requestScheduleUpdateDto,
             @CookieValue(name = "SESSION") String sessionId
@@ -51,7 +54,6 @@ public class ScheduleController {
         authorizationService.validateSession(sessionId);
 
         ResponseScheduleDto scheduleDto = scheduleService.updateScheduleById(scheduleId , requestScheduleUpdateDto);
-
         return ResponseDto.success(scheduleDto , "성공적으로 수정 하였습니다.");
     }
 
