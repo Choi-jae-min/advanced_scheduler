@@ -1,9 +1,6 @@
 package sparta.advancedscheduler.auth.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +14,8 @@ import java.time.LocalDateTime;
 public class UserAuthSession {
 
     @Id
-    private String sessionId; // 랜덤 토큰(UUID 등)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String sessionId;
 
     @Column(nullable = false)
     private Long userId;
@@ -25,8 +23,7 @@ public class UserAuthSession {
     @Column(nullable = false)
     private LocalDateTime expiresAt;
 
-    public UserAuthSession(String sessionId, Long userId, LocalDateTime expiresAt) {
-        this.sessionId = sessionId;
+    public UserAuthSession(Long userId, LocalDateTime expiresAt) {
         this.userId = userId;
         this.expiresAt = expiresAt;
     }

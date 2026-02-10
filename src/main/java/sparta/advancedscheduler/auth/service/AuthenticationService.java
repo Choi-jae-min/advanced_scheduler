@@ -13,11 +13,10 @@ import sparta.advancedscheduler.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthenticationService {
 
     private final UserAuthSessionRepository sessionRepository;
     private final UserService userService;
@@ -34,11 +33,9 @@ public class AuthService {
             throw new InvalidPasswordException();
         }
 
-        String sessionId = UUID.randomUUID().toString();
         LocalDateTime expiresAt = LocalDateTime.now().plusDays(7);
+        UserAuthSession session = sessionRepository.save(new UserAuthSession(user.get().getId(), expiresAt));
 
-        sessionRepository.save(new UserAuthSession(sessionId, user.get().getId(), expiresAt));
-
-        return sessionId;
+        return session.getSessionId();
     }
 }
