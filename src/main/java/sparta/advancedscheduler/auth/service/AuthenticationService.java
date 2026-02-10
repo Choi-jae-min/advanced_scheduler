@@ -8,6 +8,7 @@ import sparta.advancedscheduler.auth.entity.UserAuthSession;
 import sparta.advancedscheduler.auth.repository.UserAuthSessionRepository;
 import sparta.advancedscheduler.global.exception.auth.InvalidEmailException;
 import sparta.advancedscheduler.global.exception.auth.InvalidPasswordException;
+import sparta.advancedscheduler.global.utility.PasswordEncoder;
 import sparta.advancedscheduler.user.entity.User;
 import sparta.advancedscheduler.user.service.UserService;
 
@@ -20,6 +21,7 @@ public class AuthenticationService {
 
     private final UserAuthSessionRepository sessionRepository;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Transactional
@@ -29,7 +31,7 @@ public class AuthenticationService {
             throw new InvalidEmailException();
         }
 
-        if(!requestLoginDto.getPassword().equals(user.get().getPassword())) {
+        if(passwordEncoder.matches(requestLoginDto.getPassword(), user.get().getPassword())) {
             throw new InvalidPasswordException();
         }
 

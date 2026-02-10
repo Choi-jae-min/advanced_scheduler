@@ -13,7 +13,6 @@ import sparta.advancedscheduler.global.exception.auth.UnauthorizedException;
 public class AuthorizationService {
 
     private final UserAuthSessionRepository sessionRepository;
-
     public void validateSession(String sessionId) {
         if(sessionId == null || sessionId.isEmpty()) {
             throw new UnauthorizedException();

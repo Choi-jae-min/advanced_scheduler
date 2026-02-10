@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sparta.advancedscheduler.global.utility.PasswordEncoder;
 import sparta.advancedscheduler.user.dto.ResponseUpdateUserDto;
 import sparta.advancedscheduler.user.dto.ResponseUserDto;
 import sparta.advancedscheduler.user.dto.ResponseUserListDto;
@@ -20,14 +21,14 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Long createUser(RequestUserDto requestDto) {
         User user = new User(
                 requestDto.getUsername(),
                 requestDto.getEmail(),
-                requestDto.getPassword()
+                passwordEncoder.encode(requestDto.getPassword())
         );
 
         userRepository.save(user);
