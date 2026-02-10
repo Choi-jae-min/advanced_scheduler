@@ -85,7 +85,8 @@ public class ScheduleService {
         return scheduleId;
     }
 
-    private Schedule findScheduleById(Long scheduleId) {
+    @Transactional
+    public Schedule findScheduleById(Long scheduleId) {
         return scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new EntityNotFoundException("일정이 존재하지 않습니다 : " + scheduleId)
         );

@@ -13,7 +13,8 @@ import sparta.advancedscheduler.global.exception.auth.UnauthorizedException;
 public class AuthorizationService {
 
     private final UserAuthSessionRepository sessionRepository;
-    public void validateSession(String sessionId) {
+
+    public Long validateSession(String sessionId) {
         if(sessionId == null || sessionId.isEmpty()) {
             throw new UnauthorizedException();
         }
@@ -24,5 +25,7 @@ public class AuthorizationService {
         if(session.isExpired()) {
             throw new UnauthorizedException();
         }
+
+        return session.getUserId();
     }
 }

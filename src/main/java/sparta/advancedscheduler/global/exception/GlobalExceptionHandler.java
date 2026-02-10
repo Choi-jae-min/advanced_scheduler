@@ -1,5 +1,6 @@
 package sparta.advancedscheduler.global.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -22,6 +23,12 @@ public class GlobalExceptionHandler {
                 .body(ResponseDto.error(e.getMessage()));
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ResponseDto<Void>> handleEntityNotFoundException(EntityNotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ResponseDto.error(e.getMessage()));
+    }
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<ResponseDto<Void>> handleAuthInputException(AuthException e) {

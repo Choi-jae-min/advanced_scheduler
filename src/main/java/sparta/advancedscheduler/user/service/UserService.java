@@ -50,10 +50,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseUserDto getUserByUserId(Long userId) {
+    public ResponseUserDto getUserDtoByUserId(Long userId) {
         User user = checkIsUser(userId);
 
         return new ResponseUserDto(user.getUsername(), user.getEmail());
+    }
+
+    @Transactional
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional

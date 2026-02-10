@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping("{userId}")
     public ResponseDto<ResponseUserDto> getUser(@PathVariable Long userId) {
-        ResponseUserDto userDto = userService.getUserByUserId(userId);
+        ResponseUserDto userDto = userService.getUserDtoByUserId(userId);
 
         return ResponseDto.success(userDto , "유저 조회에 성공하였습니다.");
     }
