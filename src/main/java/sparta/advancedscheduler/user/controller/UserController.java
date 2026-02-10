@@ -1,5 +1,6 @@
 package sparta.advancedscheduler.user.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseDto<Long> signUp(@RequestBody RequestUserDto requestDto) {
+    public ResponseDto<Long> signUp(@RequestBody @Valid RequestUserDto requestDto) {
         Long userId = userService.createUser(requestDto);
 
         return ResponseDto.success(userId , "회원가입에 성공하였습니다.");
