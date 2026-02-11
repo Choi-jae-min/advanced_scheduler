@@ -1,6 +1,7 @@
 package sparta.advancedscheduler.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sparta.advancedscheduler.auth.dto.RequestLoginDto;
@@ -15,6 +16,7 @@ import sparta.advancedscheduler.user.service.UserService;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -30,8 +32,8 @@ public class AuthenticationService {
         if (user.isEmpty()) {
             throw new InvalidEmailException();
         }
-
-        if(passwordEncoder.matches(requestLoginDto.getPassword(), user.get().getPassword())) {
+        checkUserAuthSessionIsActive(user.get().getId());
+        if(!passwordEncoder.matches(requestLoginDto.getPassword(), user.get().getPassword())) {
             throw new InvalidPasswordException();
         }
 
@@ -40,4 +42,10 @@ public class AuthenticationService {
 
         return session.getSessionId();
     }
+
+    private void checkUserAuthSessionIsActive(Long userId) {
+        Optional<UserAuthSession> userAuthSession = sessionRepository.findActiveUserByUserId(userId);
+        userAuthSession.ifPresent(UserAuthSession::expire);
+    }
+
 }

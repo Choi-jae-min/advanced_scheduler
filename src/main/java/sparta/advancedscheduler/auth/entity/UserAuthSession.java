@@ -23,12 +23,24 @@ public class UserAuthSession {
     @Column(nullable = false)
     private LocalDateTime expiresAt;
 
+    @Column(nullable = false)
+    private boolean isActive;
+
     public UserAuthSession(Long userId, LocalDateTime expiresAt) {
         this.userId = userId;
         this.expiresAt = expiresAt;
+        this.isActive = true;
     }
 
     public boolean isExpired() {
-        return expiresAt.isBefore(LocalDateTime.now());
+        if(expiresAt.isBefore(LocalDateTime.now()) || !isActive){
+            this.isActive = false;
+            return true;
+        }
+        return false;
+    }
+
+    public void expire() {
+        this.isActive = false;
     }
 }
