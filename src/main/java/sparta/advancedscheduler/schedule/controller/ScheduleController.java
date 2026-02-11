@@ -23,19 +23,16 @@ public class ScheduleController {
             @RequestBody RequestScheduleDto requestScheduleDto,
             @CookieValue(name = "SESSION") String sessionId
     ) {
-        Long userId = authorizationService.validateSession(sessionId);
-        Long createdScheduleId = scheduleService.createSchedule(userId ,requestScheduleDto);
+        Long createdScheduleId = scheduleService.createSchedule(sessionId, requestScheduleDto);
         return ResponseDto.success(createdScheduleId , "성공적으로 일정을 생성하였습니다.");
     }
 
     @GetMapping
     public ResponseDto<ResponseScheduleListDto> getSchedules(
-            @CookieValue(name = "SESSION") String sessionId,
+            @RequestParam(required = false) Long userId,
             @PageableDefault(size = 10, page = 0) Pageable pageable
     ) {
-        Long userId = authorizationService.validateSession(sessionId);
-
-        Page<ResponseScheduleListDto> scheduleListDtos = scheduleService.findScheduleListByName(userId, pageable);
+        Page<ResponseScheduleListDto> scheduleListDtos = scheduleService.findScheduleListByUserID(userId, pageable);
         return ResponseDto.pagination(scheduleListDtos , "성공적으로 조회 하였습니다.");
     }
 
