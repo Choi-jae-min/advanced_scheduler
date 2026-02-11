@@ -1,9 +1,13 @@
 package sparta.advancedscheduler.schedule.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sparta.advancedscheduler.comment.service.CommentService;
 import sparta.advancedscheduler.schedule.dto.RequestScheduleDto;
 import sparta.advancedscheduler.schedule.dto.RequestScheduleUpdateDto;
 import sparta.advancedscheduler.schedule.dto.ResponseScheduleDto;
@@ -11,14 +15,16 @@ import sparta.advancedscheduler.schedule.dto.ResponseScheduleListDto;
 import sparta.advancedscheduler.schedule.entity.Schedule;
 import sparta.advancedscheduler.schedule.repository.ScheduleRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleFinder scheduleFinder;
+    private final CommentService commentService;
 
     @Transactional
     public Long createSchedule(RequestScheduleDto requestScheduleDto) {
@@ -34,24 +40,31 @@ public class ScheduleService {
 
 
     @Transactional(readOnly = true)
-    public List<ResponseScheduleListDto> findScheduleListByName(String poster) {
-        List<Schedule> schedules = scheduleRepository.findAllByPoster(poster);
+    public Page<ResponseScheduleListDto> findScheduleListByName(String poster , Pageable pageable) {
+        Page<Schedule> schedules = scheduleRepository.findAllByPoster(poster,pageable);
 
-        List<ResponseScheduleListDto> responseScheduleListDtos = new ArrayList<>();
-        for (Schedule schedule : schedules) {
-            ResponseScheduleListDto dto = new ResponseScheduleListDto(
-                    schedule.getTitle()
-            );
+        List<ResponseScheduleListDto> dtoList = schedules.getContent().stream()
+                .map(schedule -> new ResponseScheduleListDto(
+                            schedule.getTitle(),
+                            schedule.getContent(),
+                            schedule.getPoster(),
+                            commentService.getCommentCount(schedule.getId()),
+                            schedule.getCreatedDate(),
+                            schedule.getLastModifiedDate()
+                    )
+                )
+                .toList();
 
-            responseScheduleListDtos.add(dto);
-        }
-
-        return responseScheduleListDtos;
+        return new PageImpl<>(
+                dtoList,
+                pageable,
+                schedules.getTotalElements()
+        );
     }
 
     @Transactional(readOnly = true)
     public ResponseScheduleDto findScheduleListById(Long scheduleId) {
-        Schedule schedule = findScheduleById(scheduleId);
+        Schedule schedule = scheduleFinder.findScheduleById(scheduleId);
 
         return new ResponseScheduleDto(
                 schedule.getTitle(),
@@ -64,7 +77,8 @@ public class ScheduleService {
 
     @Transactional
     public ResponseScheduleDto updateScheduleById(Long scheduleId , RequestScheduleUpdateDto body) {
-        Schedule schedule = findScheduleById(scheduleId);
+
+        Schedule schedule = scheduleFinder.findScheduleById(scheduleId);
 
         schedule.update(body);
         return new ResponseScheduleDto(
@@ -77,18 +91,10 @@ public class ScheduleService {
     }
     @Transactional
     public Long deleteSchedule(Long scheduleId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new EntityNotFoundException("일정이 존재하지 않습니다 : " + scheduleId)
-        );
-
+        Schedule schedule = scheduleFinder.findScheduleById(scheduleId);
         scheduleRepository.delete(schedule);
         return scheduleId;
     }
 
-    @Transactional
-    public Schedule findScheduleById(Long scheduleId) {
-        return scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new EntityNotFoundException("일정이 존재하지 않습니다 : " + scheduleId)
-        );
-    }
+
 }

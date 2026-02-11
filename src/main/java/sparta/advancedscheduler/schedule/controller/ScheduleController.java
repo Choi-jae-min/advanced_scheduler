@@ -2,16 +2,14 @@ package sparta.advancedscheduler.schedule.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import sparta.advancedscheduler.auth.service.AuthorizationService;
 import sparta.advancedscheduler.global.dto.ResponseDto;
-import sparta.advancedscheduler.schedule.dto.RequestScheduleDto;
-import sparta.advancedscheduler.schedule.dto.RequestScheduleUpdateDto;
-import sparta.advancedscheduler.schedule.dto.ResponseScheduleDto;
-import sparta.advancedscheduler.schedule.dto.ResponseScheduleListDto;
+import sparta.advancedscheduler.schedule.dto.*;
 import sparta.advancedscheduler.schedule.service.ScheduleService;
-
-import java.util.List;
 
 @RestController()
 @RequestMapping("/schedules")
@@ -31,10 +29,10 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseDto<List<ResponseScheduleListDto>> getSchedules(@RequestParam String poster) {
-        List<ResponseScheduleListDto> scheduleListDtos = scheduleService.findScheduleListByName(poster);
-
-        return ResponseDto.success(scheduleListDtos , "성공적으로 조회 하였습니다.");
+    public ResponseDto<ResponseScheduleListDto> getSchedules(@RequestParam(required = false) String poster , @PageableDefault(size = 10, page = 0) Pageable pageable
+    ) {
+        Page<ResponseScheduleListDto> scheduleListDtos = scheduleService.findScheduleListByName(poster, pageable);
+        return ResponseDto.pagination(scheduleListDtos , "성공적으로 조회 하였습니다.");
     }
 
     @GetMapping("{scheduleId}")

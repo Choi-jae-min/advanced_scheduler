@@ -1,10 +1,10 @@
 package sparta.advancedscheduler.schedule.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import sparta.advancedscheduler.schedule.entity.Schedule;
 
-import java.util.List;
-
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    List<Schedule> findAllByPoster(String poster);
+    Page<Schedule> findAllByPoster(String poster,Pageable pageable);
 }

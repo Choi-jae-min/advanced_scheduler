@@ -1,5 +1,7 @@
 package sparta.advancedscheduler.global.dto;
 
+import org.springframework.data.domain.Page;
+
 public interface ResponseDto <T>{
 
     static <T> ResponseDto<T> error(String message){
@@ -12,5 +14,16 @@ public interface ResponseDto <T>{
 
     static <T> ResponseDto<T> success(T data , String message){
         return new SuccessDto<>(data ,message);
+    }
+
+    static <T> ResponseDto<T> pagination(Page<T> data , String message){
+        return new PageResponseDto<>(
+                data.getNumber(),
+                data.getSize(),
+                data.getContent(),
+                data.getTotalPages(),
+                data.getTotalElements(),
+                message
+        );
     }
 }
