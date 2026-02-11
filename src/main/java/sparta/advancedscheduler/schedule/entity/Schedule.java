@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import sparta.advancedscheduler.global.entity.AuditableEntity;
 import sparta.advancedscheduler.schedule.dto.RequestScheduleUpdateDto;
 import sparta.advancedscheduler.user.entity.User;
@@ -13,6 +15,8 @@ import sparta.advancedscheduler.user.entity.User;
 @Entity
 @Table(name = "schedules")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE schedules SET deleted_date = now() WHERE id = ?")
+@SQLRestriction("deleted_date IS NULL")
 public class Schedule extends AuditableEntity {
 
     @Id

@@ -20,4 +20,6 @@ public class AuditableEntity {
 
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
+
+    private LocalDateTime deletedDate;
 }
