@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import sparta.advancedscheduler.schedule.entity.Schedule;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    Page<Schedule> findAllByPoster(String poster,Pageable pageable);
+    Page<Schedule> findAllByPosterOrderByLastModifiedDateDesc(String poster,Pageable pageable);
 }

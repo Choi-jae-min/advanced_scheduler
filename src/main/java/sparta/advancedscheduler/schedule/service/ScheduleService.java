@@ -41,7 +41,7 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     public Page<ResponseScheduleListDto> findScheduleListByName(String poster , Pageable pageable) {
-        Page<Schedule> schedules = scheduleRepository.findAllByPoster(poster,pageable);
+        Page<Schedule> schedules = scheduleRepository.findAllByPosterOrderByLastModifiedDateDesc(poster,pageable);
 
         List<ResponseScheduleListDto> dtoList = schedules.getContent().stream()
                 .map(schedule -> new ResponseScheduleListDto(
