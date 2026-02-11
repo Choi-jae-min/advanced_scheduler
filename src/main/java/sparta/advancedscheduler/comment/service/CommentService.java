@@ -12,7 +12,7 @@ import sparta.advancedscheduler.comment.entity.Comment;
 import sparta.advancedscheduler.comment.repository.CommentRepository;
 import sparta.advancedscheduler.global.exception.auth.UnauthorizedException;
 import sparta.advancedscheduler.schedule.entity.Schedule;
-import sparta.advancedscheduler.schedule.service.ScheduleFinder;
+import sparta.advancedscheduler.schedule.service.ScheduleServiceImpl;
 import sparta.advancedscheduler.user.entity.User;
 import sparta.advancedscheduler.user.service.UserService;
 
@@ -25,12 +25,12 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final UserService userService;
-    private final ScheduleFinder scheduleFinder;
+    private final ScheduleServiceImpl scheduleService;
 
     @Transactional
     public Long addComment(RequestCommentDto requestCommentDto, Long userId) {
         User user = userService.getUserById(userId);
-        Schedule schedule = scheduleFinder.findScheduleById(requestCommentDto.getScheduleId());
+        Schedule schedule = scheduleService.findScheduleById(requestCommentDto.getScheduleId());
         Comment comment = new Comment(requestCommentDto.getContent() ,user,schedule);
 
         commentRepository.save(comment);

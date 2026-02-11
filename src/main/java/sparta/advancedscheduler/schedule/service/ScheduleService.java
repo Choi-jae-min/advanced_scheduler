@@ -1,5 +1,6 @@
 package sparta.advancedscheduler.schedule.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,17 +24,18 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ScheduleService {
+public class ScheduleService implements ScheduleServiceImpl {
 
     private final ScheduleRepository scheduleRepository;
     private final AuthorizationService authorizationService;
-    private final ScheduleFinder scheduleFinder;
     private final CommentService commentService;
     private final UserService userService;
 
 
     @Transactional
-    public Long createSchedule(Long userId , RequestScheduleDto requestScheduleDto) {
+    public Long createSchedule(String sessionId ,RequestScheduleDto requestScheduleDto) {
+        Long userId = authorizationService.validateSession(sessionId);
+
         User user = userService.getUserById(userId);
 
         Schedule schedule = new Schedule(
@@ -48,7 +50,7 @@ public class ScheduleService {
 
 
     @Transactional(readOnly = true)
-    public Page<ResponseScheduleListDto> findScheduleListByName(Long userID , Pageable pageable) {
+    public Page<ResponseScheduleListDto> findScheduleListByUserID(Long userID , Pageable pageable) {
         Page<Schedule> schedules = scheduleRepository.findAllByUserIdOrderByLastModifiedDateDesc(userID,pageable);
 
         List<ResponseScheduleListDto> dtoList = schedules.getContent().stream()
@@ -72,7 +74,7 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     public ResponseScheduleDto findScheduleListById(Long scheduleId) {
-        Schedule schedule = scheduleFinder.findScheduleById(scheduleId);
+        Schedule schedule = findScheduleById(scheduleId);
 
         return new ResponseScheduleDto(
                 schedule.getTitle(),
@@ -85,7 +87,7 @@ public class ScheduleService {
 
     @Transactional
     public ResponseScheduleDto updateScheduleById(Long userId , Long scheduleId , RequestScheduleUpdateDto body) {
-        Schedule schedule = scheduleFinder.findScheduleById(scheduleId);
+        Schedule schedule = findScheduleById(scheduleId);
         authorizationService.checkAuthorization(schedule.getUser().getId() ,userId);
 
         schedule.update(body);
@@ -99,10 +101,18 @@ public class ScheduleService {
     }
     @Transactional
     public Long deleteSchedule(Long userId,Long scheduleId) {
-        Schedule schedule = scheduleFinder.findScheduleById(scheduleId);
+        Schedule schedule = findScheduleById(scheduleId);
         authorizationService.checkAuthorization(schedule.getUser().getId() ,userId);
         scheduleRepository.delete(schedule);
         return scheduleId;
+    }
+
+    @Override
+    @Transactional
+    public Schedule findScheduleById(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new EntityNotFoundException("일정이 존재하지 않습니다 : " + scheduleId)
+        );
     }
 
 
