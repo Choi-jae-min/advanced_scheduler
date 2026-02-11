@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sparta.advancedscheduler.global.entity.AuditableEntity;
 import sparta.advancedscheduler.schedule.dto.RequestScheduleUpdateDto;
+import sparta.advancedscheduler.user.entity.User;
 
 
 @Getter
@@ -24,13 +25,14 @@ public class Schedule extends AuditableEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String poster;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="user_id")
+    private User user;
 
-    public Schedule(String title, String content, String poster) {
+    public Schedule(String title, String content, User user) {
         this.title = title;
         this.content = content;
-        this.poster = poster;
+        this.user = user;
     }
 
     public void update(RequestScheduleUpdateDto dto) {

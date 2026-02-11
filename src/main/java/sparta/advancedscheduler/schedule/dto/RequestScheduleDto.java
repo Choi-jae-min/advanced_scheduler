@@ -12,6 +12,4 @@ public class RequestScheduleDto {
     @NotBlank
     @Size(max = 200 , message = "일정은 200자 이내로 작성해주세요.")
     String content;
-    @NotBlank
-    String poster;
 }

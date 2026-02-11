@@ -23,15 +23,19 @@ public class ScheduleController {
             @RequestBody RequestScheduleDto requestScheduleDto,
             @CookieValue(name = "SESSION") String sessionId
     ) {
-        authorizationService.validateSession(sessionId);
-        Long createdScheduleId = scheduleService.createSchedule(requestScheduleDto);
+        Long userId = authorizationService.validateSession(sessionId);
+        Long createdScheduleId = scheduleService.createSchedule(userId ,requestScheduleDto);
         return ResponseDto.success(createdScheduleId , "성공적으로 일정을 생성하였습니다.");
     }
 
     @GetMapping
-    public ResponseDto<ResponseScheduleListDto> getSchedules(@RequestParam(required = false) String poster , @PageableDefault(size = 10, page = 0) Pageable pageable
+    public ResponseDto<ResponseScheduleListDto> getSchedules(
+            @CookieValue(name = "SESSION") String sessionId,
+            @PageableDefault(size = 10, page = 0) Pageable pageable
     ) {
-        Page<ResponseScheduleListDto> scheduleListDtos = scheduleService.findScheduleListByName(poster, pageable);
+        Long userId = authorizationService.validateSession(sessionId);
+
+        Page<ResponseScheduleListDto> scheduleListDtos = scheduleService.findScheduleListByName(userId, pageable);
         return ResponseDto.pagination(scheduleListDtos , "성공적으로 조회 하였습니다.");
     }
 
@@ -49,9 +53,8 @@ public class ScheduleController {
             @RequestBody RequestScheduleUpdateDto requestScheduleUpdateDto,
             @CookieValue(name = "SESSION") String sessionId
     ) {
-        authorizationService.validateSession(sessionId);
-
-        ResponseScheduleDto scheduleDto = scheduleService.updateScheduleById(scheduleId , requestScheduleUpdateDto);
+        Long userId = authorizationService.validateSession(sessionId);
+        ResponseScheduleDto scheduleDto = scheduleService.updateScheduleById(userId,scheduleId , requestScheduleUpdateDto);
         return ResponseDto.success(scheduleDto , "성공적으로 수정 하였습니다.");
     }
 
@@ -60,8 +63,8 @@ public class ScheduleController {
             @PathVariable Long scheduleId,
             @CookieValue(name = "SESSION") String sessionId
             ) {
-        authorizationService.validateSession(sessionId);
-        Long deletedId = scheduleService.deleteSchedule(scheduleId);
+        Long userId = authorizationService.validateSession(sessionId);
+        Long deletedId = scheduleService.deleteSchedule(userId, scheduleId);
         return ResponseDto.success(deletedId , "성공적으로 삭제 하였습니다.");
     }
 }

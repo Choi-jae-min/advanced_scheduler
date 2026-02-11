@@ -28,4 +28,10 @@ public class AuthorizationService {
 
         return session.getUserId();
     }
+
+    public void checkAuthorization(Long userId, Long userSessionId) {
+        if(!userId.equals(userSessionId)){
+            throw new UnauthorizedException("권한이 없습니다.");
+        }
+    }
 }
