@@ -8,8 +8,8 @@ import sparta.advancedscheduler.comment.dto.ResponseCommentUpdateDto;
 import java.util.List;
 
 public interface CommentServiceImpl {
-    Long addComment(RequestCommentDto requestCommentDto, Long userId);
+    Long addComment(RequestCommentDto requestCommentDto, String sessionId);
     List<ResponseCommentDto> getAllCommentByScheduleId(Long scheduleId);
-    ResponseCommentUpdateDto update(RequestCommentUpdateDto requestCommentUpdateDto, Long commentId, Long userSessionId);
-    void deleteComment(Long commentId, Long userSessionId);
+    ResponseCommentUpdateDto update(RequestCommentUpdateDto requestCommentUpdateDto, Long commentId, String sessionId);
+    void deleteComment(Long commentId, String sessionId);
 }

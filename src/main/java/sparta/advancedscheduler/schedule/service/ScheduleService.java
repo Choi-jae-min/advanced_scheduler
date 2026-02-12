@@ -85,7 +85,9 @@ public class ScheduleService implements ScheduleServiceImpl {
     }
 
     @Transactional
-    public ResponseScheduleDto updateScheduleById(Long userId , Long scheduleId , RequestScheduleUpdateDto body) {
+    public ResponseScheduleDto updateScheduleById(String sessionId , Long scheduleId , RequestScheduleUpdateDto body) {
+        Long userId = authorizationService.validateSession(sessionId);
+
         Schedule schedule = findScheduleById(scheduleId);
         authorizationService.checkAuthorization(schedule.getUser().getId() ,userId);
 
@@ -99,7 +101,9 @@ public class ScheduleService implements ScheduleServiceImpl {
         );
     }
     @Transactional
-    public Long deleteSchedule(Long userId,Long scheduleId) {
+    public Long deleteSchedule(String sessionId,Long scheduleId) {
+        Long userId = authorizationService.validateSession(sessionId);
+
         Schedule schedule = findScheduleById(scheduleId);
         authorizationService.checkAuthorization(schedule.getUser().getId() ,userId);
         scheduleRepository.delete(schedule);

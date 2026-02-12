@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sparta.advancedscheduler.auth.service.AuthorizationService;
 import sparta.advancedscheduler.global.dto.ResponseDto;
 import sparta.advancedscheduler.user.dto.ResponseUpdateUserDto;
 import sparta.advancedscheduler.user.dto.ResponseUserDto;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final AuthorizationService authorizationService;
 
     @GetMapping
     public ResponseDto<List<ResponseUserListDto>> getAllUsers(@RequestParam(required = false) String userName){
@@ -34,23 +32,18 @@ public class UserController {
         return ResponseDto.success(userDto , "유저 조회에 성공하였습니다.");
     }
 
-    @PatchMapping("{userId}")
+    @PatchMapping("")
     public ResponseDto<ResponseUpdateUserDto> updateUser(
-            @PathVariable Long userId,
             @CookieValue(name = "SESSION", required = false) String sessionId,
             @RequestBody ResponseUpdateUserDto requestDto) {
-        authorizationService.validateSession(sessionId);
-        ResponseUpdateUserDto updateUserDto = userService.updateUser(userId ,requestDto);
-
+        ResponseUpdateUserDto updateUserDto = userService.updateUser(sessionId ,requestDto);
         return ResponseDto.success(updateUserDto , "유저 업데이트 성공 하였습니다.");
     }
 
-    @DeleteMapping("{userId}")
+    @DeleteMapping("")
     public ResponseEntity<Void> deleteUser(
-            @PathVariable Long userId,
             @CookieValue(name = "SESSION", required = false) String sessionId) {
-        authorizationService.validateSession(sessionId);
-        userService.deleteUser(userId);
+        userService.deleteUser(sessionId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -21,5 +21,4 @@ public class CommentFindService {
     public Comment getCommentById(Long commentId) {
         return  commentRepository.findById(commentId).orElseThrow(() -> new EntityNotFoundException("댓글이 존재 하지 않습니다."));
     }
-
 }

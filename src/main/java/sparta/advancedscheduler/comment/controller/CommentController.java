@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sparta.advancedscheduler.auth.service.AuthorizationService;
 import sparta.advancedscheduler.comment.dto.RequestCommentDto;
 import sparta.advancedscheduler.comment.dto.RequestCommentUpdateDto;
 import sparta.advancedscheduler.comment.dto.ResponseCommentDto;
@@ -21,16 +20,13 @@ import java.util.List;
 public class CommentController {
 
     private final CommentServiceImpl commentService;
-    private final AuthorizationService authorizationService;
 
     @PostMapping
     public ResponseDto<Long> addComment(
             @Valid @RequestBody RequestCommentDto requestCommentDto,
             @CookieValue(name ="SESSION") String sessionId
     ) {
-        Long userId = authorizationService.validateSession(sessionId);
-        Long commentId = commentService.addComment(requestCommentDto, userId);
-
+        Long commentId = commentService.addComment(requestCommentDto, sessionId);
         return ResponseDto.success(commentId , "댓글을 성공적으로 등록 하였습니다.");
     }
 
@@ -46,9 +42,7 @@ public class CommentController {
             @PathVariable Long commentId,
             @RequestBody RequestCommentUpdateDto requestCommentUpdateDto,
             @CookieValue(name = "SESSION") String sessionId) {
-        Long userId = authorizationService.validateSession(sessionId);
-
-        ResponseCommentUpdateDto responseCommentUpdateDto = commentService.update(requestCommentUpdateDto,commentId,userId);
+        ResponseCommentUpdateDto responseCommentUpdateDto = commentService.update(requestCommentUpdateDto,commentId,sessionId);
 
         return ResponseDto.success(responseCommentUpdateDto, "성공적으로 수정 되었습니다.");
     }
@@ -58,9 +52,7 @@ public class CommentController {
             @PathVariable Long commentId,
             @CookieValue(name = "SESSION") String sessionId
     ) {
-        Long userId = authorizationService.validateSession(sessionId);
-        commentService.deleteComment(commentId , userId);
-
+        commentService.deleteComment(commentId , sessionId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

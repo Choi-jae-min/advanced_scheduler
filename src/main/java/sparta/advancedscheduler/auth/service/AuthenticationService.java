@@ -32,7 +32,7 @@ public class AuthenticationService {
         if (user.isEmpty()) {
             throw new InvalidEmailException();
         }
-        checkUserAuthSessionIsActive(user.get().getId());
+        UserAuthSessionExpire(user.get().getId());
         if(!passwordEncoder.matches(requestLoginDto.getPassword(), user.get().getPassword())) {
             throw new InvalidPasswordException();
         }
@@ -43,9 +43,8 @@ public class AuthenticationService {
         return session.getSessionId();
     }
 
-    private void checkUserAuthSessionIsActive(Long userId) {
+    public void UserAuthSessionExpire(Long userId) {
         Optional<UserAuthSession> userAuthSession = sessionRepository.findActiveUserByUserId(userId);
         userAuthSession.ifPresent(UserAuthSession::expire);
     }
-
 }

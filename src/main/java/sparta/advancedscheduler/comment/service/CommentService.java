@@ -30,7 +30,9 @@ public class CommentService implements CommentServiceImpl{
 
 
     @Transactional
-    public Long addComment(RequestCommentDto requestCommentDto, Long userId) {
+    public Long addComment(RequestCommentDto requestCommentDto, String sessionId) {
+        Long userId = authorizationService.validateSession(sessionId);
+
         User user = userService.getUserById(userId);
         Schedule schedule = scheduleService.findScheduleById(requestCommentDto.getScheduleId());
         Comment comment = new Comment(requestCommentDto.getContent() ,user,schedule);
@@ -50,7 +52,9 @@ public class CommentService implements CommentServiceImpl{
     }
 
     @Transactional
-    public ResponseCommentUpdateDto update(RequestCommentUpdateDto requestCommentUpdateDto,Long commentId, Long userSessionId) {
+    public ResponseCommentUpdateDto update(RequestCommentUpdateDto requestCommentUpdateDto,Long commentId, String sessionId) {
+        Long userSessionId = authorizationService.validateSession(sessionId);
+
         Comment comment = commentFindService.getCommentById(commentId);
         authorizationService.checkAuthorization(userSessionId , comment.getUser().getId());
         comment.update(requestCommentUpdateDto.getComment());
@@ -60,7 +64,9 @@ public class CommentService implements CommentServiceImpl{
     }
 
     @Transactional
-    public void deleteComment(Long commentId, Long userSessionId) {
+    public void deleteComment(Long commentId, String sessionId) {
+        Long userSessionId = authorizationService.validateSession(sessionId);
+
         Comment comment = commentFindService.getCommentById(commentId);
 
         authorizationService.checkAuthorization(userSessionId , comment.getUser().getId());

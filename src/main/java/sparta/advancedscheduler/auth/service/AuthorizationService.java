@@ -3,6 +3,7 @@ package sparta.advancedscheduler.auth.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sparta.advancedscheduler.auth.entity.UserAuthSession;
 import sparta.advancedscheduler.auth.repository.UserAuthSessionRepository;
 import sparta.advancedscheduler.global.exception.auth.UnauthorizedException;
@@ -14,6 +15,7 @@ public class AuthorizationService {
 
     private final UserAuthSessionRepository sessionRepository;
 
+    @Transactional(readOnly = true)
     public Long validateSession(String sessionId) {
         if(sessionId == null || sessionId.isEmpty()) {
             throw new UnauthorizedException();

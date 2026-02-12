@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import sparta.advancedscheduler.auth.service.AuthorizationService;
 import sparta.advancedscheduler.global.dto.ResponseDto;
 import sparta.advancedscheduler.schedule.dto.*;
 import sparta.advancedscheduler.schedule.service.ScheduleService;
@@ -16,7 +15,6 @@ import sparta.advancedscheduler.schedule.service.ScheduleService;
 @RequiredArgsConstructor
 public class ScheduleController {
     private final ScheduleService scheduleService;
-    private final AuthorizationService authorizationService;
     @PostMapping
     public ResponseDto<Long> createSchedule(
             @Valid
@@ -50,8 +48,7 @@ public class ScheduleController {
             @RequestBody RequestScheduleUpdateDto requestScheduleUpdateDto,
             @CookieValue(name = "SESSION") String sessionId
     ) {
-        Long userId = authorizationService.validateSession(sessionId);
-        ResponseScheduleDto scheduleDto = scheduleService.updateScheduleById(userId,scheduleId , requestScheduleUpdateDto);
+        ResponseScheduleDto scheduleDto = scheduleService.updateScheduleById(sessionId,scheduleId , requestScheduleUpdateDto);
         return ResponseDto.success(scheduleDto , "성공적으로 수정 하였습니다.");
     }
 
@@ -60,8 +57,7 @@ public class ScheduleController {
             @PathVariable Long scheduleId,
             @CookieValue(name = "SESSION") String sessionId
             ) {
-        Long userId = authorizationService.validateSession(sessionId);
-        Long deletedId = scheduleService.deleteSchedule(userId, scheduleId);
+        Long deletedId = scheduleService.deleteSchedule(sessionId, scheduleId);
         return ResponseDto.success(deletedId , "성공적으로 삭제 하였습니다.");
     }
 }
