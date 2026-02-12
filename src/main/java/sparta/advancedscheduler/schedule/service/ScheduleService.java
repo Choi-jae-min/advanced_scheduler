@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sparta.advancedscheduler.auth.service.AuthorizationService;
-import sparta.advancedscheduler.comment.service.CommentService;
+import sparta.advancedscheduler.comment.service.CommentFindService;
 import sparta.advancedscheduler.schedule.dto.RequestScheduleDto;
 import sparta.advancedscheduler.schedule.dto.RequestScheduleUpdateDto;
 import sparta.advancedscheduler.schedule.dto.ResponseScheduleDto;
@@ -28,9 +28,8 @@ public class ScheduleService implements ScheduleServiceImpl {
 
     private final ScheduleRepository scheduleRepository;
     private final AuthorizationService authorizationService;
-    private final CommentService commentService;
+    private final CommentFindService commentService;
     private final UserService userService;
-
 
     @Transactional
     public Long createSchedule(String sessionId ,RequestScheduleDto requestScheduleDto) {

@@ -1,6 +1,5 @@
 package sparta.advancedscheduler.comment.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +20,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CommentService {
+public class CommentService implements CommentServiceImpl{
 
     private final CommentRepository commentRepository;
+    private final CommentFindService commentFindService;
     private final UserService userService;
     private final ScheduleServiceImpl scheduleService;
     private final AuthorizationService authorizationService;
+
 
     @Transactional
     public Long addComment(RequestCommentDto requestCommentDto, Long userId) {
@@ -50,7 +51,7 @@ public class CommentService {
 
     @Transactional
     public ResponseCommentUpdateDto update(RequestCommentUpdateDto requestCommentUpdateDto,Long commentId, Long userSessionId) {
-        Comment comment = getCommentById(commentId);
+        Comment comment = commentFindService.getCommentById(commentId);
         authorizationService.checkAuthorization(userSessionId , comment.getUser().getId());
         comment.update(requestCommentUpdateDto.getComment());
         return new ResponseCommentUpdateDto(
@@ -60,20 +61,11 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long commentId, Long userSessionId) {
-        Comment comment = getCommentById(commentId);
+        Comment comment = commentFindService.getCommentById(commentId);
 
         authorizationService.checkAuthorization(userSessionId , comment.getUser().getId());
 
         commentRepository.delete(comment);
-    }
-    @Transactional(readOnly = true)
-    public long getCommentCount(Long scheduleId) {
-        return  commentRepository.countByScheduleId(scheduleId);
-    }
-
-    @Transactional(readOnly = true)
-    public Comment getCommentById(Long commentId) {
-        return  commentRepository.findById(commentId).orElseThrow(() -> new EntityNotFoundException("댓글이 존재 하지 않습니다."));
     }
 
 }

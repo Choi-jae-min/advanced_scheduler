@@ -10,7 +10,7 @@ import sparta.advancedscheduler.comment.dto.RequestCommentDto;
 import sparta.advancedscheduler.comment.dto.RequestCommentUpdateDto;
 import sparta.advancedscheduler.comment.dto.ResponseCommentDto;
 import sparta.advancedscheduler.comment.dto.ResponseCommentUpdateDto;
-import sparta.advancedscheduler.comment.service.CommentService;
+import sparta.advancedscheduler.comment.service.CommentServiceImpl;
 import sparta.advancedscheduler.global.dto.ResponseDto;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentServiceImpl commentService;
     private final AuthorizationService authorizationService;
 
     @PostMapping
