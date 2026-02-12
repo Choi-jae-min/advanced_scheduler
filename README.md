@@ -1,13 +1,24 @@
 ## 일정관리 앱 (숙련)
+
+### 기능
+유저를 회원가입 조회 수정 삭제 할 수 있습니다.
+로그인을 통해 일정, 댓글을 관리할 수 있습니다.
+
+일정을 등록 수정 삭제 조회 할 수 있습니다.
+수정 삭제는 본인이 작성한 일정만 할 수 있습니다.
+
+댓글을 등록 수정 삭제 할 수 있습니다.
+수정 삭제는 본인이 작성한 일정만 할 수 있습니다.
+특정 일정에 달린 댓글들을 조회할 수 있습니다.
+
+일정을 페이지 단위로 조회할 수 있습니다.
+페이지 조회시 댓글의 수가 같이 나옵니다. 
+
 ### API 명세서
 
-Server_Url = localhost:8080
+https://long-holly-6cf.notion.site/API-30557c647499803c975afce86f81bfa5
 
-#### 일정
-| 기능       | Method | URL | 설명|
-|----------|--------|--------------------|--------------|
-| 일정 등록    | POST   | /api/schedulers| 일정을 등록합니다. |
-| 일정 조회    | GET    | /api/schedulers/{id} | 하나의 일정을 조회합니다. |
-| 일정 리스트 조회 | GET    | /api/schedulers | 조건에 맞는 일정리스트를 조회합니다. |
-| 일정 수정    | PATCH    | /api/schedulers/{id} | 특정 일정의 정보를 수정합니다. |
-| 일정 삭제    | DELETE | /api/schedulers/{id} | 특정 일정을 삭제합니다. |
+-----
+### ERD
+
+<img width="673" height="815" alt="image" src="https://github.com/user-attachments/assets/25980509-5df2-49ba-bcef-82debc353ec2" />
