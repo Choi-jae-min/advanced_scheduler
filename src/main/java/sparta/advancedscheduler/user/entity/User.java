@@ -39,7 +39,3 @@ public class User extends AuditableEntity {
         this.username = requestDto.getUsername();
     }
 }
-
-// 유저를 지우면 -->> 유저가 사라져야한다. -->> 연관관계가 있어서 못지운다.
-// 유저가 지워졌어요 ( 주민번호 비밀번호 실제로 지우고) ( 이름, 이메일 )
-// 유저가 지워졌어요 (실제로 사라지진않음) -->> 일정 이랑 (하드 딜리트), 댓글(하드 딜리트)
