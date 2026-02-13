@@ -4,7 +4,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sparta.advancedscheduler.auth.service.AuthenticationService;
 import sparta.advancedscheduler.auth.service.AuthorizationService;
 import sparta.advancedscheduler.global.utility.PasswordEncoder;
 import sparta.advancedscheduler.user.dto.ResponseUpdateUserDto;
@@ -25,7 +24,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorizationService authorizationService;
-    private final AuthenticationService authenticationService;
 
     @Transactional
     public Long createUser(RequestUserDto requestDto) {
@@ -79,7 +77,6 @@ public class UserService {
         Long userId = authorizationService.validateSession(sessionId);
 
         User user = checkIsUser(userId);
-        authenticationService.UserAuthSessionExpire(userId);
         userRepository.delete(user);
     }
 

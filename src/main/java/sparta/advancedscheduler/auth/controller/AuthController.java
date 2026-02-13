@@ -3,6 +3,7 @@ package sparta.advancedscheduler.auth.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +41,11 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseDto<Long> signUp(@RequestBody @Valid RequestUserDto requestDto) {
+    public ResponseEntity<ResponseDto<Long>> signUp(@RequestBody @Valid RequestUserDto requestDto) {
         Long userId = userService.createUser(requestDto);
 
-        return ResponseDto.success(userId , "회원가입에 성공하였습니다.");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ResponseDto.success(userId , "회원가입에 성공하였습니다."));
     }
 }
